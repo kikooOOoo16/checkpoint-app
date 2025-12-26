@@ -1,59 +1,78 @@
 # Checkpoint API
 
-A simple checkpoint API and web application for workarea visitor registration and worker login/checkout.
+A secure checkpoint API and web application for workarea visitor registration and worker/administrator management.
 
 ## Overview
 
-This project provides a web interface (using EJS templates) to manage:
+This project provides a comprehensive web interface to manage:
 
-- **Visitor Registration**: Visitors can register their details when entering the workarea.
-- **Worker Login/Checkout**: Workers (pre-registered by an admin) can log in, track their last login time, and log out.
+- **Visitor Registration**: Seamless registration for visitors entering the workarea.
+- **Worker Management**: Workers can log in to track their attendance.
+- **Administrator Controls**: Secure dashboard for administrators to create and manage worker and admin accounts.
+- **Session Tracking**: Detailed history of login and logout events for all workers.
 
-The application uses MongoDB for data persistence and a custom logging system for observability.
+The application is built with Node.js, Express, and MongoDB, featuring a modern responsive UI.
 
 ## Features
 
-- **Responsive UI**: EJS-based templates for Registration, Login, and Dashboard.
-- **Session Management**: Worker accounts maintain a session after login.
-- **Repository Pattern**: Abstracted data access layer using MongoDB.
-- **Custom Logger**: Namespace-based logger with colored output for different log levels (DEBUG, INFO, WARN, ERROR).
-- **Migration System**: Automated MongoDB collection setup.
-- **Health Checks**: Standard health endpoint for monitoring.
+- **Secure Authentication**: Password hashing using `bcrypt` (adaptive salt rounds).
+- **Administrator Dashboard**: Dedicated interface for managing system access and creating new accounts.
+- **JSON Schema Validation**: Strict request body validation using `ajv` with descriptive error messages.
+- **Modern Responsive UI**:
+    - Built with **Bootstrap 5.3**.
+    - Professional **Dark Theme** consistency across all pages.
+    - Smooth **Fade-in animations** for page transitions.
+    - **Top-Middle Toast Notifications** for real-time success and error feedback.
+- **Session Management**: Secure cookie-based sessions with navigation guards to prevent unauthorized access.
+- **Detailed Session Tracking**: Tracks `loginTime` and `logoutTime` for every worker session in a dedicated history
+  array.
+- **Repository Pattern**: Clean data access layer abstraction for MongoDB.
+- **Advanced Logging**: Namespace-based logger with colored output and trace ID tracking for enhanced observability.
+- **Migration System**: Automated database setup and initial data seeding.
 
 ## Prerequisites
 
-- Node.js (>= 20.x)
-- Yarn or NPM
-- MongoDB instance
+- **Node.js**: >= 20.x
+- **MongoDB**: A running instance (local or remote)
+- **Package Manager**: Yarn or NPM
 
 ## Setup
 
 ### 1. Environment Variables
 
-Create a `.env` file in the root directory (you can use `.env.template` as a starting point):
+Create a `.env` file in the root directory based on `.env.template`:
 
 ```env
 PORT=8080
 MONGODB_URL=mongodb://localhost:27017
 MONGODB_DB_NAME=checkpoint_db
-SESSION_SECRET=your_session_secret
+SESSION_SECRET=your_secure_session_secret
 NODE_ENV=LOCAL
+SYSTEM=SEED
 ```
 
 ### 2. Installation
 
 ```bash
-yarn install
-# or
 npm install
+# or
+yarn install
 ```
 
-### 3. Database Migration
+### 3. Database Migration & Initialization
 
-Run the migration script to create the necessary MongoDB collections (`visitors` and `workers`):
+Run the migration scripts to create collections and seed the initial administrator account:
 
 ```bash
 npm run migrate
+```
+
+*Note: This creates an initial admin: `admin@checkpoint.com` / `admin123`.*
+
+Alternatively, you can create a custom administrator account interactively:
+
+```bash
+npm run create:admin
 ```
 
 ## Running the Application
@@ -61,8 +80,6 @@ npm run migrate
 ### Development Mode (with hot-reload)
 
 ```bash
-yarn server:watch
-# or
 npm run server:watch
 ```
 
@@ -75,19 +92,39 @@ npm run start
 
 ## API Routes
 
-- `GET /registration`: Shows the visitor registration form.
-- `POST /registration`: Handles visitor registration.
-- `GET /login`: Shows the worker login form.
-- `POST /login`: Handles worker login.
-- `GET /dashboard`: Displays the dashboard after successful registration or login.
-- `GET /logout`: Logs out the current worker and redirects to login.
-- `GET /health`: Basic health check endpoint (e.g., `/SEED-api-health` depending on the `SYSTEM` environment variable).
+### Public / Visitor Routes
+
+- `GET /registration`: Visitor registration form.
+- `POST /registration`: Submit visitor registration.
+- `GET /login`: Worker login page.
+- `POST /login`: Authenticate worker.
+
+### Administrator Routes
+
+- `GET /admin/login`: Administrator login page.
+- `POST /admin/login`: Authenticate administrator.
+- `GET /admin/dashboard`: Management dashboard (Admin only).
+- `POST /admin/workers`: Create new worker or admin accounts (Admin only).
+
+### Common Routes
+
+- `GET /dashboard`: Landing page after successful worker login or visitor registration.
+- `GET /logout`: Terminate session and record checkout time.
+- `GET /health`: Basic health check endpoint (`/{SYSTEM}-api-health`).
 
 ## Project Structure
 
-- `src/controller`: Request handlers and route definitions using `routing-controllers`.
-- `src/database`: MongoDB connection logic, repositories, and entities.
-- `src/service`: Business logic layer.
-- `src/logger`: Custom logging implementation based on `log4js`.
-- `views`: EJS templates for the UI.
-- `migration`: Database migration scripts.
+- `src/controller`: Route handlers and controllers (Routing-Controllers).
+- `src/database`: MongoDB configuration, schemas (Entities), and Repositories.
+- `src/middleware`: Custom middlewares including validation, auth guards, and error handling.
+- `src/service`: Core business logic and authentication services.
+- `src/logger`: log4js-based logging implementation.
+- `scripts`: Administrative CLI tools (e.g., admin creation).
+- `migration`: Versioned database migration scripts.
+- `views`: EJS templates and partials.
+- `public`: Static assets (CSS, Images, Client-side JS).
+
+## Validation
+
+All incoming requests are validated against JSON schemas located in `src/model/validation_schema/`. Error messages are
+user-friendly and displayed directly via the UI's toast system.

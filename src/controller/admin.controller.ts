@@ -29,20 +29,23 @@ export class AdminController {
     if (admin && admin.role === AccountRole.ADMIN) {
       logger(LogNamespace.ADMIN_CONTROLLER_NAMESPACE).info('Admin login successful', {email});
       session.user = admin;
-      return res.redirect('/admin/dashboard');
+      res.redirect('/admin/dashboard');
+      return res;
     }
 
     logger(LogNamespace.ADMIN_CONTROLLER_NAMESPACE).warn('Admin login failed: Unauthorized or invalid credentials', {
       email
     });
     session.error = 'Invalid admin credentials';
-    return res.redirect('/admin/login');
+    res.redirect('/admin/login');
+    return res;
   }
 
   @Get('/dashboard')
   getDashboard(@Session() session: any, @Res() res: Response) {
     if (!session.user || session.user.role !== AccountRole.ADMIN) {
-      return res.redirect('/admin/login');
+      res.redirect('/admin/login');
+      return res;
     }
 
     const successMessage = session.successMessage;
@@ -50,13 +53,14 @@ export class AdminController {
     session.successMessage = null;
     session.error = null;
 
-    return res.render('admin_dashboard', {
+    res.render('admin_dashboard', {
       user: session.user,
       title: 'Admin Dashboard',
       successMessage,
       error,
       AccountRole
     });
+    return res;
   }
 
   @Post('/workers')

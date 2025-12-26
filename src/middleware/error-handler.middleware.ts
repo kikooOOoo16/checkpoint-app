@@ -23,6 +23,10 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
       }
     });
 
+    if (response.headersSent) {
+      return next(error);
+    }
+
     const errorDTO = ErrorHandlerMiddleware.convertError(error);
     response.status(errorDTO.status).contentType(ErrorHandlerMiddleware.APPLICATION_PROBLEM_JSON).json(errorDTO);
     next(error);
