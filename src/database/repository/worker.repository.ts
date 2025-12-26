@@ -6,8 +6,8 @@ export class WorkerRepository extends BaseRepository<Worker> {
     super('workers');
   }
 
-  async findByUsername(username: string): Promise<Worker | null> {
-    return this.findOne({username});
+  async findByEmail(email: string): Promise<Worker | null> {
+    return this.findOne({email});
   }
 }
 

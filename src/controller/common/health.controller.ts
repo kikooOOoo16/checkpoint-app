@@ -13,7 +13,6 @@ export class HealthController {
    *
    * @route GET /seed-adapter-health
    * @returns The HTTP response with status code 200 (OK) and system name.
-   * TODO update endpoint to match external platform name
    */
   @Get(`/${Constants.EXTERNAL_SYSTEM_NAME}-api-health`)
   public getHealthState(): AdapterHealthDTO {

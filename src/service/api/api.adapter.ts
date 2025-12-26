@@ -48,8 +48,14 @@ export class ApiAdapter {
 
     try {
       return await this.httpClient.post<void, any>(httpRequest);
-    } catch (err) {
-      const msg = 'Problem retrieving data';
+    } catch (err: any) {
+      logger(LogNamespace.API_ADAPTER_REQUEST_NAMESPACE).error('Problem retrieving data from external platform', {
+        context: {
+          traceId: getTraceId(),
+          attributes: {iccid, error: err.message, stack: err.stack}
+        }
+      });
+      throw err;
     }
   }
 }

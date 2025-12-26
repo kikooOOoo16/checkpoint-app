@@ -1,6 +1,6 @@
 import {ExpressErrorMiddlewareInterface, Middleware} from 'routing-controllers';
 import {BaseError, PlatformError} from '../errors';
-import {getTraceId, logger} from '../logger';
+import {getTraceId, logger, LogNamespace} from '../logger';
 import {Request, Response} from 'express';
 import HttpStatus from 'http-status-codes';
 import {Constants} from '../service/const';
@@ -16,7 +16,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   private static readonly APPLICATION_PROBLEM_JSON = 'application/problem+json';
 
   error(error: any, request: Request, response: Response, next: (err?: any) => any): void {
-    logger().error(error.message, {
+    logger(LogNamespace.ERROR_HANDLER_NAMESPACE).error(error.message, {
       context: {
         traceId: getTraceId(),
         stackTrace: error.stack

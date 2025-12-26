@@ -1,6 +1,14 @@
+import {AccountRole} from '../../../model/enums/account-roles.enum';
+
+export interface WorkerSession {
+  loginTime: Date;
+  logoutTime?: Date;
+}
+
 export interface Worker {
-  username: string;
+  email: string;
   password?: string; // Should be hashed
-  role: 'worker' | 'admin';
+  role: AccountRole;
   lastLogin?: Date;
+  sessions?: WorkerSession[];
 }

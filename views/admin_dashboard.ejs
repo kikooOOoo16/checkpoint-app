@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="fade-in">
+<nav class="navbar navbar-dark mb-5">
+    <div class="container">
+        <span class="navbar-brand">Admin Dashboard</span>
+        <div class="d-flex align-items-center">
+            <span class="navbar-text me-3 text-white d-none d-sm-inline">Logged in as: <strong><%= locals.user ? locals.user.email : ''; %></strong></span>
+            <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+            <div class="card shadow-lg">
+                <div class="card-header">
+                    <h4 class="mb-0 text-center uppercase">Add New Account</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/workers" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="user@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   minlength="6">
+                        </div>
+                        <div class="mb-4">
+                            <label for="role" class="form-label">Account Role</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="<%= locals.AccountRole ? locals.AccountRole.WORKER : 'worker' %>">
+                                    Worker
+                                </option>
+                                <option value="<%= locals.AccountRole ? locals.AccountRole.ADMIN : 'admin' %>">Admin
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/toasts') %>
+<%- include('partials/scripts') %>
+</body>
+</html>

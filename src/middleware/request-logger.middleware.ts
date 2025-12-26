@@ -1,4 +1,4 @@
-import {logger} from '../logger';
+import {logger, LogNamespace} from '../logger';
 import {NextFunction, Request, Response} from 'express';
 
 /**
@@ -10,7 +10,7 @@ import {NextFunction, Request, Response} from 'express';
  */
 export const logRequestBodyMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (req.body) {
-    logger('RequestLoggerMiddleware').debug(`Raw body`, {
+    logger(LogNamespace.REQUEST_LOGGER_NAMESPACE).debug(`Raw body`, {
       context: {
         traceId: req.body?.traceId || req.body?.uuid,
         attributes: {body: req.body}

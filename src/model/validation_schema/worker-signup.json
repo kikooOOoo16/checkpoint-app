@@ -1,0 +1,53 @@
+{
+  "$id": "WorkerSignupSchema",
+  "title": "Worker Signup Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["email", "password", "role"],
+
+  "properties": {
+    "email": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 254,
+      "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+      "errorMessage": {
+        "type": "Email must be a string.",
+        "minLength": "Email must be at least 5 characters long.",
+        "maxLength": "Email must not exceed 254 characters.",
+        "pattern": "Email must be a valid email address (e.g., user@example.com)."
+      }
+    },
+
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z0-9]).+$",
+      "errorMessage": {
+        "type": "Password must be a string.",
+        "minLength": "Password must be at least 8 characters long.",
+        "maxLength": "Password must not exceed 128 characters.",
+        "pattern": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      }
+    },
+
+    "role": {
+      "type": "string",
+      "enum": ["worker", "admin"],
+      "errorMessage": {
+        "type": "Role must be a string.",
+        "enum": "Role must be either 'worker' or 'admin'."
+      }
+    }
+  },
+
+  "errorMessage": {
+    "required": {
+      "email": "Email is required.",
+      "password": "Password is required.",
+      "role": "Role is required."
+    },
+    "additionalProperties": "Unexpected additional fields are not allowed."
+  }
+}

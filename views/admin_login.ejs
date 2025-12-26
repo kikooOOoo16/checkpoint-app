@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="centered-layout fade-in">
+<div class="login-card">
+    <div class="card-header-image">
+        <img src="/images/admin-login-header.jpg" alt="Admin Login Form Header">
+    </div>
+
+    <h2>Admin Login</h2>
+
+    <form id="adminLoginForm" action="/admin/login" method="POST">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="admin@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn-login">Login</button>
+    </form>
+
+    <div class="text-center">
+        <a href="/login" class="back-link btn-secondary mt-4">Back to Worker Login</a>
+    </div>
+</div>
+
+<%- include('partials/toasts') %>
+<%- include('partials/scripts') %>
+</body>
+</html>

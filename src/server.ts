@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import cors from 'cors';
 import {useExpressServer} from 'routing-controllers';
 import express, {Express, RequestHandler} from 'express';
-import {HealthController, VisitorController} from './controller';
-import {logger} from './logger';
+import {AdminController, HealthController, VisitorController} from './controller';
+import {logger, LogNamespace} from './logger';
 import {ErrorHandlerMiddleware, logRequestBodyMiddleware} from './middleware';
 import * as httpContext from 'express-http-context';
 import session from 'express-session';
@@ -37,13 +37,14 @@ export const startServer = (port: number): Express => {
 
   expressApp.set('view engine', 'ejs');
   expressApp.set('views', path.join(__dirname, '../views'));
+  expressApp.use(express.static(path.join(__dirname, '../public')));
 
   if (process.env.NODE_ENV !== 'PRD') {
     expressApp.use(logRequestBodyMiddleware);
   }
 
   useExpressServer(expressApp, {
-    controllers: [HealthController, VisitorController],
+    controllers: [HealthController, VisitorController, AdminController],
     routePrefix: config.get('ROUTES_PREFIX'),
     middlewares: [ErrorHandlerMiddleware],
     defaultErrorHandler: false
@@ -51,7 +52,7 @@ export const startServer = (port: number): Express => {
 
   // binding server to port
   expressApp.listen(port, () => {
-    logger().info(`Server running on port ${port}`);
+    logger(LogNamespace.SERVER_NAMESPACE).info(`Server running on port ${port}`);
   });
 
   return expressApp;

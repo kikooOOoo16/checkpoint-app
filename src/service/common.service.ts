@@ -1,5 +1,6 @@
 import {apiAdapter} from './api/api.adapter';
 import {CheckpointGenericRequest} from '../model';
+import {getTraceId, logger, LogNamespace} from '../logger';
 
 /**
  * A class that provides common functionality shared across multiple services.
@@ -20,6 +21,12 @@ export class CommonService {
    * @returns {Promise<any>} A promise containing the response object from the platform.
    */
   async getPlatformStatus(body: CheckpointGenericRequest): Promise<any> {
+    logger(LogNamespace.COMMON_SERVICE_NAMESPACE).info('Retrieving platform status', {
+      context: {
+        traceId: getTraceId(),
+        attributes: {body}
+      }
+    });
     return {} as Promise<any>;
   }
 }

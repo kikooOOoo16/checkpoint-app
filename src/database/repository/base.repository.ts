@@ -38,9 +38,10 @@ export abstract class BaseRepository<T> {
     await collection.insertOne(data as any);
   }
 
-  async update(query: any, data: Partial<T>): Promise<void> {
+  async update(query: any, data: any): Promise<void> {
     const collection = await this.getCollection();
-    await collection.updateOne(query, {$set: data});
+    const update = Object.keys(data).some(key => key.startsWith('$')) ? data : {$set: data};
+    await collection.updateOne(query, update);
   }
 
   async findOne(query: any): Promise<T | null> {

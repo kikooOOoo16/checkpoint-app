@@ -2,11 +2,11 @@
 import {startServer} from './server';
 import pjson from '../package.json';
 import config from 'config';
-import {logger} from './logger';
+import {logger, LogNamespace} from './logger';
 
 const env = process.env.NODE_ENV || 'PRD';
 const port = config.get<number>('PORT');
-logger().info(`Starting ${pjson.name} v${pjson.version} ENV=${env} ...`);
+logger(LogNamespace.APP_NAMESPACE).info(`Starting ${pjson.name} v${pjson.version} ENV=${env} ...`);
 
 startServer(port);
-logger().info(`... app listening on port ${port}`);
+logger(LogNamespace.APP_NAMESPACE).info(`... app listening on port ${port}`);
