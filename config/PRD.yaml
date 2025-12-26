@@ -1,0 +1,4 @@
+use: default.yml
+ENV: PRD
+
+LOG_LEVEL: info

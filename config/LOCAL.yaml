@@ -1,0 +1,4 @@
+use: default.yml
+ENV: LOCAL
+
+LOG_LEVEL: debug

@@ -1,0 +1,39 @@
+{
+  "$id": "GiveDetailsGenericSchema",
+  "title": "Give Details Generic payload schema",
+  "type": "object",
+  "required": ["credentials", "traceId", "idList"],
+  "properties": {
+    "credentials": {
+      "$ref": "CredentialsSchema"
+    },
+    "traceId": {
+      "type": "string",
+      "errorMessage": {
+        "type": "traceId property must be a string."
+      }
+    },
+    "idList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^\\d{5,30}$",
+        "errorMessage": "idList.iccid must be a string and contain only digits (5-30 characters)."
+      },
+      "uniqueItems": true,
+      "errorMessage": {
+        "type": "idList property must be an array.",
+        "minItems": "idList property must contain at least one ID.",
+        "uniqueItems": "idList property must contain unique IDs."
+      }
+    }
+  },
+  "errorMessage": {
+    "required": {
+      "credentials": "credentials property is required.",
+      "traceId": "traceId property is required.",
+      "idList": "idList property is required."
+    }
+  }
+}

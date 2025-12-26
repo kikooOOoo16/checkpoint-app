@@ -1,0 +1,6 @@
+use: default.yml
+ENV: UNITTEST
+
+PORT: 8976
+
+LOG_LEVEL: info
