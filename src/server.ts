@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import cors from 'cors';
 import {useExpressServer} from 'routing-controllers';
 import express, {Express, RequestHandler} from 'express';
-import {AdminController, HealthController, VisitorController} from './controller';
+import {AdminController, AuthController, DashboardController, HealthController, VisitorController} from './controller';
 import {logger, LogNamespace} from './logger';
 import {ErrorHandlerMiddleware, logRequestBodyMiddleware} from './middleware';
 import * as httpContext from 'express-http-context';
@@ -44,7 +44,7 @@ export const startServer = (port: number): Express => {
   }
 
   useExpressServer(expressApp, {
-    controllers: [HealthController, VisitorController, AdminController],
+    controllers: [HealthController, VisitorController, AdminController, AuthController, DashboardController],
     routePrefix: config.get('ROUTES_PREFIX'),
     middlewares: [ErrorHandlerMiddleware],
     defaultErrorHandler: false

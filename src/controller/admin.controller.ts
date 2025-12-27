@@ -1,46 +1,12 @@
-import {Body, Controller, Get, Post, Redirect, Render, Res, Session, UseBefore} from 'routing-controllers';
+import {Body, Controller, Get, Post, Redirect, Res, Session, UseBefore} from 'routing-controllers';
 import {authService, detailService} from '../service';
 import {logger, LogNamespace} from '../logger';
 import {validateBody} from '../middleware/validator';
 import {Response} from 'express';
 import {AccountRole} from '../model/enums/account-roles.enum';
-import {redirectIfLoggedIn} from '../middleware';
 
 @Controller('/admin')
 export class AdminController {
-  @Get('/login')
-  @UseBefore(redirectIfLoggedIn)
-  @Render('admin_login')
-  getLogin(@Session() session: any) {
-    const error = session.error;
-    session.error = null;
-    return {title: 'Admin Login', error};
-  }
-
-  @Post('/login')
-  @UseBefore(redirectIfLoggedIn)
-  @UseBefore(validateBody('LoginSchema'))
-  async loginAdmin(@Body() body: any, @Session() session: any, @Res() res: Response) {
-    const {email, password} = body;
-    logger(LogNamespace.ADMIN_CONTROLLER_NAMESPACE).info('Admin login attempt', {email});
-
-    const admin = await detailService.loginWorker(email, password);
-
-    if (admin && admin.role === AccountRole.ADMIN) {
-      logger(LogNamespace.ADMIN_CONTROLLER_NAMESPACE).info('Admin login successful', {email});
-      session.user = admin;
-      res.redirect('/admin/dashboard');
-      return res;
-    }
-
-    logger(LogNamespace.ADMIN_CONTROLLER_NAMESPACE).warn('Admin login failed: Unauthorized or invalid credentials', {
-      email
-    });
-    session.error = 'Invalid admin credentials';
-    res.redirect('/admin/login');
-    return res;
-  }
-
   @Get('/dashboard')
   getDashboard(@Session() session: any, @Res() res: Response) {
     if (!session.user || session.user.role !== AccountRole.ADMIN) {
